@@ -70,6 +70,7 @@ async def on_message(message):
         if not channel:
             channel = await guild.create_text_channel(str(message.author.id), category=category)
             await channel.set_permissions(everyone, read_messages=False, send_messages=False)
+            await channel.send(everyone)
         await channel.send(embed=embed)
 
         activeUser = User(bot=bot, ctx=message)
