@@ -70,6 +70,7 @@ async def on_message(message):
         if not channel:
             channel = await guild.create_text_channel(str(message.author.id), category=category)
             await channel.set_permissions(everyone, read_messages=False, send_messages=False)
+            await channel.send(everyone)
         await channel.send(embed=embed)
 
         activeUser = User(bot=bot, ctx=message)
@@ -96,14 +97,22 @@ async def on_message(message):
             other_args = message.content.lower().split(" ")[1:]
             for user in message.mentions:
                 if str(user.id) == message.channel.name:
-                    return await user.send(customCommands.commands[customCommandName])
+                    embed = discord.Embed(title=message.author.top_role.name, color=SuccessEmbedColor)
+                    embed.add_field(name=f"─────────────", value=customCommands.commands[customCommandName])
+                    embed.set_footer(text=f"Sent by {message.author.name}")
+                    await user.send(embed=embed)
+                    return await message.add_reaction("\N{THUMBS UP SIGN}")
             for user in other_args:
                 try:
                     check_user = get(message.guild.members, id=int(user))
                 except ValueError:
                     continue
                 if user == message.channel.name:
-                    return await check_user.send(customCommands.commands[customCommandName])
+                    embed = discord.Embed(title=message.author.top_role.name, color=SuccessEmbedColor)
+                    embed.add_field(name=f"─────────────", value=customCommands.commands[customCommandName])
+                    embed.set_footer(text=f"Sent by {message.author.name}")
+                    await check_user.send(embed=embed)
+                    return await message.add_reaction("\N{THUMBS UP SIGN}")
             if customCommandName in customCommands.commands:
                 return await message.channel.send(customCommands.commands[customCommandName])
 

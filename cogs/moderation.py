@@ -94,7 +94,7 @@ class Moderation(commands.Cog):
         embed.add_field(name=f"─────────────", value=f"{response}")
         embed.set_footer(text=f"Sent by {ctx.author.name}")
         await user.send(embed=embed)  # Sends the embed to the log channel
-        await ctx.send(":thumbsup:")
+        await ctx.message.add_reaction("\N{THUMBS UP SIGN}")
 
     @commands.has_permissions(manage_messages=True, manage_channels=True)
     @commands.command(name="Close", aliases=['C'], help="Closes the current channel", usage="Close")

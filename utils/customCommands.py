@@ -63,25 +63,32 @@ class Command:
 
     def add_command(self, command, response):
         query = f"UPDATE {TABLE} SET commands = ?"
-        self.raw_commands += f"|{command}:{response}" if len(self.raw_commands) > 2 else f"{command}:{response}"
-        self.cursor.execute(query, (self.raw_commands,))
+        total_comms = ""
+        self.commands[command] = response
+        for index, list_items in enumerate(list(self.commands.items())):
+            command, response = list_items
+            if index == 0:
+                total_comms += f"{command}:{response}"
+            else:
+                total_comms += f"|{command}:{response}"
+
+        self.cursor.execute(query, (total_comms,))
         self.conn.commit()
         self._get_custom_info()
         return True
 
     def remove_command(self, removing):
-        commands = ""
         query = f"UPDATE {TABLE} SET commands = ?"
-        try:
-            for command in self.raw_commands.split("|"):
-                name, response = command.split(":")
-                if name == removing:
-                    continue
-                commands += f"|{command}:{response}" if len(self.raw_commands) > 2 else f"{command}:{response}"
-        except ValueError:
-            return False
+        total_comms = ""
+        del self.commands[removing]
+        for index, list_items in enumerate(list(self.commands.items())):
+            command, response = list_items
+            if index == 0:
+                total_comms += f"{command}:{response}"
+            else:
+                total_comms += f"|{command}:{response}"
 
-        self.cursor.execute(query, (commands,))
+        self.cursor.execute(query, (total_comms,))
         self.conn.commit()
         self._get_custom_info()
         return True
