@@ -100,7 +100,7 @@ async def on_message(message):
                     embed = discord.Embed(title=message.author.top_role.name, color=SuccessEmbedColor)
                     embed.add_field(name=f"─────────────", value=customCommands.commands[customCommandName])
                     embed.set_footer(text=f"Sent by {message.author.name}")
-                    message = await user.send(embed=embed)
+                    await user.send(embed=embed)
                     return await message.add_reaction("\N{THUMBS UP SIGN}")
             for user in other_args:
                 try:
@@ -111,7 +111,7 @@ async def on_message(message):
                     embed = discord.Embed(title=message.author.top_role.name, color=SuccessEmbedColor)
                     embed.add_field(name=f"─────────────", value=customCommands.commands[customCommandName])
                     embed.set_footer(text=f"Sent by {message.author.name}")
-                    message = await check_user.send(embed=embed)
+                    await check_user.send(embed=embed)
                     return await message.add_reaction("\N{THUMBS UP SIGN}")
             if customCommandName in customCommands.commands:
                 return await message.channel.send(customCommands.commands[customCommandName])
